@@ -39,6 +39,48 @@ router.post("/create", isAuthenticated, async(req, res) => {
     }
 })
 
+router.get("/get/:userID", async(req, res)=> {
+    try{
+    const foundUser = await User.findById(req.params.userID);
+    if(!foundUser){
+        return res.status(404).json({err: "user not found"}); 
+    }
+
+    const schedule = await Schedule.find({user: req.params.userID});
+    res.status(200).json(schedule);
+    }catch(e){}
+})
+
+router.put("/update/:scheduleID", isAuthenticated, async (req, res) => {
+    try {
+      const foundSchedule = await Schedule.findById(req.params.scheduleID);
+  
+      if (!foundSchedule) {
+        return res.status(404).json({ err: "Schedule not found" });
+      }
+  
+      if (foundSchedule.events.length > 0) {
+        return res
+          .status(403)
+          .json({ err: "Cannot delete schedule with events" });
+      }
+  
+      const { day, dayStart, dayEnd, eventDuration } = req.body;
+  
+      const scheduleStart = Number(dayStart.replace(":", "."));
+      const scheduleEnd = Number(dayEnd.replace(":", "."));
+  
+      const updatedSchedule = await Schedule.updateOne(
+        { _id: req.params.scheduleID },
+        { day, dayStart: scheduleStart, dayEnd: scheduleEnd, eventDuration }
+      );
+      res.status(200).json(updatedSchedule);
+    } catch (err) {
+      res.status(500).json({ err: err.message });
+    }
+  });
 
 
+
+  
 module.exports = router;

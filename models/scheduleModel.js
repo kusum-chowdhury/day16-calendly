@@ -18,7 +18,7 @@ const schedulesSchema = new Mongoose.Schema({
         required: true
     },
     eventDuration: {
-        type: Date,
+        type: Number,
         required: true
     },
     events: [

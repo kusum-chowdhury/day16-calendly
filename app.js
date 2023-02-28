@@ -12,9 +12,7 @@ connectDB();
 app.set(cors());
 
 app.use('/api/v1/user', userRoutes);
-
 app.use('/api/v1/schedule', scheduleRoutes);
-
 app.use('/api/v1/event', eventRoutes);
 
 
