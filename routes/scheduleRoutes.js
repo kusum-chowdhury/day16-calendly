@@ -81,6 +81,36 @@ router.put("/update/:scheduleID", isAuthenticated, async (req, res) => {
   });
 
 
+  router.delete("/delete/:scheduleID", isAuthenticated, async (req, res) => {
+    try {
+      const foundUser = await User.findById(req.user.id);
+  
+      if (!foundUser) {
+        return res.status(404).json({ err: "User not found" });
+      }
+  
+      const foundSchedule = await Schedule.findById(req.params.scheduleID);
+  
+      if (!foundSchedule) {
+        return res.status(404).json({ err: "Schedule not found" });
+      }
+  
+      if (foundSchedule.events.length > 0) {
+        return res
+          .status(403)
+          .json({ err: "Cannot delete schedule with events" });
+      }
+  
+      await Schedule.findByIdAndDelete(req.params.scheduleID);
+      foundUser.schedules.pull(req.params.scheduleID);
+      await foundUser.save();
+  
+      res.status(200).json({ msg: "Schedule deleted" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ err: err.message });
+    }
+  });
 
   
 module.exports = router;
