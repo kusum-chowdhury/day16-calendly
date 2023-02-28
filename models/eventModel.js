@@ -1,4 +1,5 @@
 const Mongoose = require('mongoose');
+const { ObjectId } = Mongoose.Schema;
 
 const eventSchema = new Mongoose.Schema({
   menteeEmail: {
@@ -35,4 +36,4 @@ end: {
 }
 })
 
-module.exports = Mongoose.model("Schedule", eventSchema);
+module.exports = Mongoose.model("Event", eventSchema);

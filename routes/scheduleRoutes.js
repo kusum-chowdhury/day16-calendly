@@ -15,7 +15,7 @@ router.post("/create", isAuthenticated, async(req, res) => {
         return res.status(404).json({err: "user not found"});
      }
 
-     const presentSchedule = await schedule.findOne({user, day});
+     const presentSchedule = await Schedule.findOne({user, day});
      
     if(presentSchedule){
         return res.status(403).json({err: "schedule already exists"});
